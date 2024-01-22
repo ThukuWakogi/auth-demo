@@ -3,7 +3,8 @@
   "private": true,
   "workspaces": [
     "./apps/*",
-    "./packages/*"
+    "./packages/*",
+    "./django"
   ],
   "scripts": {
     "native": "cd apps/expo && yarn start",
