@@ -18,7 +18,7 @@ export function Provider(props: Omit<TamaguiProviderProps, 'config'>) {
           </ThemeProvider>
         </NavigationProvider>
       </SafeAreaProvider>
-      <StatusBar color="auto" />
+      <StatusBar style="auto" />
     </>
   )
 }

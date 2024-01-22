@@ -1,9 +1,9 @@
-import { createTamagui } from 'tamagui'
 import { createInterFont } from '@tamagui/font-inter'
+import { createMedia } from '@tamagui/react-native-media-driver'
 import { shorthands } from '@tamagui/shorthands'
 import { tokens } from '@tamagui/themes/v2'
 import { themes } from '@tamagui/themes/v2-themes'
-import { createMedia } from '@tamagui/react-native-media-driver'
+import { createTamagui } from 'tamagui'
 
 import { animations } from '@my/ui/src/animations'
 
@@ -50,6 +50,8 @@ const bodyFont = createInterFont(
     sizeLineHeight: (size) => Math.round(size * 1.1 + (size > 20 ? 10 : 10)),
   }
 )
+
+console.log(themes.dark)
 
 export const config = createTamagui({
   defaultFont: 'body',
