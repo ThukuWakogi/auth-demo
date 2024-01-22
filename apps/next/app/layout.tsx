@@ -1,12 +1,12 @@
 'use client'
 
-import { TamaguiProvider } from './TamaguiProvider'
+import { Provider } from 'app/provider'
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <TamaguiProvider>{children}</TamaguiProvider>
+        <Provider>{children}</Provider>
       </body>
     </html>
   )

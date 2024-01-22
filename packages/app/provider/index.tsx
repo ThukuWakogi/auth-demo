@@ -1,32 +1,24 @@
-import { CustomToast, TamaguiProvider, TamaguiProviderProps, ToastProvider, config } from '@my/ui'
+import { TamaguiProviderProps } from '@my/ui'
+import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native'
+import { StatusBar } from 'expo-status-bar'
 import { useColorScheme } from 'react-native'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { NavigationProvider } from './NavigationProvider'
+import { TamaguiProvider } from './TamaguiProvider'
 
-import { ToastViewport } from './ToastViewport'
-
-export function Provider({ children, ...rest }: Omit<TamaguiProviderProps, 'config'>) {
+export function Provider(props: Omit<TamaguiProviderProps, 'config'>) {
   const scheme = useColorScheme()
-  return (
-    <TamaguiProvider
-      config={config}
-      disableInjectCSS
-      defaultTheme={scheme === 'dark' ? 'dark' : 'light'}
-      {...rest}
-    >
-      <ToastProvider
-        swipeDirection="horizontal"
-        duration={6000}
-        native={
-          [
-            /* uncomment the next line to do native toasts on mobile. NOTE: it'll require you making a dev build and won't work with Expo Go */
-            // 'mobile'
-          ]
-        }
-      >
-        {children}
 
-        <CustomToast />
-        <ToastViewport />
-      </ToastProvider>
-    </TamaguiProvider>
+  return (
+    <>
+      <SafeAreaProvider>
+        <NavigationProvider>
+          <ThemeProvider value={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+            <TamaguiProvider {...props} />
+          </ThemeProvider>
+        </NavigationProvider>
+      </SafeAreaProvider>
+      <StatusBar color="auto" />
+    </>
   )
 }
