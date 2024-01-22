@@ -11,12 +11,10 @@ import {
 } from '@my/ui'
 import { ChevronDown, ChevronUp } from '@tamagui/lucide-icons'
 import { useState } from 'react'
-import { useLink } from 'solito/link'
+import { useLink } from 'solito/navigation'
 
 export function HomeScreen() {
-  const linkProps = useLink({
-    href: '/user/nate',
-  })
+  const linkProps = useLink({ href: '/user/nate' })
 
   return (
     <YStack f={1} jc="center" ai="center" p="$4" space>
