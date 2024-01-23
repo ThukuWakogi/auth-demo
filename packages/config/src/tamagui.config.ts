@@ -51,8 +51,6 @@ const bodyFont = createInterFont(
   }
 )
 
-console.log(themes.dark)
-
 export const config = createTamagui({
   defaultFont: 'body',
   animations,
