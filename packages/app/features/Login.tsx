@@ -1,16 +1,26 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Card, Form, H1, Paragraph, PasswordField, TextField, YStack } from '@my/ui'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useLink } from 'solito/navigation'
+import { z } from 'zod'
+
+const loginSchema = z.object({
+  username_email: z.string().trim().min(1, { message: 'This field is required' }),
+  password: z.string().trim().min(1, { message: 'This field is required' }),
+})
 
 export function Login() {
-  const form = useForm({ defaultValues: { username_email: '', password: '' } })
-
-  console.log('watch', form.watch())
+  const form = useForm({
+    defaultValues: { username_email: '', password: '' },
+    resolver: zodResolver(loginSchema),
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
+  })
 
   return (
     <YStack f={1} jc="center" ai="center">
       <FormProvider {...form}>
-        <Form onSubmit={() => console.log('submitting')}>
+        <Form onSubmit={form.handleSubmit(values => console.log({ values }))}>
           <Card padded maw={400} style={{ minWidth: 350 }}>
             <Card.Header>
               <H1>Log in</H1>
