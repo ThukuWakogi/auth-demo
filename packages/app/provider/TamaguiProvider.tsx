@@ -2,6 +2,7 @@ import {
   CustomToast,
   TamaguiProvider as OGTamaguiProvider,
   TamaguiProviderProps,
+  Theme,
   ToastProvider,
   config,
 } from '@my/ui'
@@ -18,11 +19,13 @@ export function TamaguiProvider({ children, ...rest }: Omit<TamaguiProviderProps
       defaultTheme={scheme === 'dark' ? 'dark' : 'light'}
       {...rest}
     >
-      <ToastProvider swipeDirection="horizontal" duration={6000} native={['mobile']}>
-        {children}
-        <CustomToast />
-        <ToastViewport />
-      </ToastProvider>
+      <Theme name="blue">
+        <ToastProvider swipeDirection="horizontal" duration={6000} native={['mobile']}>
+          {children}
+          <CustomToast />
+          <ToastViewport />
+        </ToastProvider>
+      </Theme>
     </OGTamaguiProvider>
   )
 }

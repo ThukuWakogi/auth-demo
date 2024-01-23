@@ -1,10 +1,15 @@
 'use client'
 
+import {
+  CustomToast,
+  TamaguiProvider as TamaguiProviderOG,
+  Theme,
+  ToastProvider,
+  config,
+} from '@my/ui'
 import '@tamagui/core/reset.css'
-import '@tamagui/polyfill-dev'
-
-import { CustomToast, TamaguiProvider as TamaguiProviderOG, ToastProvider, config } from '@my/ui'
 import { NextThemeProvider, useRootTheme } from '@tamagui/next-theme'
+import '@tamagui/polyfill-dev'
 import { useServerInsertedHTML } from 'next/navigation'
 import React from 'react'
 import { StyleSheet } from 'react-native'
@@ -41,11 +46,13 @@ export function TamaguiProvider({ children }: { children: React.ReactNode }) {
       }}
     >
       <TamaguiProviderOG config={config} themeClassNameOnRoot defaultTheme={theme}>
-        <ToastProvider swipeDirection="horizontal" duration={6000} native={['mobile']}>
-          {children}
-          <CustomToast />
-          <ToastViewport />
-        </ToastProvider>
+        <Theme name="blue">
+          <ToastProvider swipeDirection="horizontal" duration={6000} native={['mobile']}>
+            {children}
+            <CustomToast />
+            <ToastViewport />
+          </ToastProvider>
+        </Theme>
       </TamaguiProviderOG>
     </NextThemeProvider>
   )
