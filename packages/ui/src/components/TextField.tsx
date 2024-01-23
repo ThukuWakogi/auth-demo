@@ -38,7 +38,7 @@ function ControlledInput({
   const { control } = useFormContext()
 
   const {
-    field,
+    field: { value, onChange, onBlur, ref, disabled },
     fieldState: { invalid, error },
   } = useController({ name, control })
 
@@ -53,10 +53,11 @@ function ControlledInput({
         <Input
           f={1}
           id={name}
-          value={field.value}
-          onChangeText={field.onChange}
-          onBlur={field.onBlur}
-          ref={field.ref}
+          value={value}
+          onChangeText={onChange}
+          onBlur={onBlur}
+          ref={ref}
+          disabled={disabled}
           theme={invalid ? 'red' : undefined}
           {...props}
         />

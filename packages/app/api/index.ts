@@ -1,3 +1,4 @@
 import { axiosInstance } from './axiosInstance'
 
-export const login = () => axiosInstance.post('/api/auth/login/')
+export const login = (body: { username: string; password: string }) =>
+  axiosInstance.post('/api/auth/login/', body)
