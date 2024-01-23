@@ -1,11 +1,12 @@
 import { ReactNode } from 'react'
 import { useController, useFormContext } from 'react-hook-form'
-import { Input, InputProps, Label, Paragraph, XStack, YStack } from 'tamagui'
+import { Input, InputProps, Label, Paragraph, SizableText, XStack, YStack } from 'tamagui'
 
 export interface ITextFieldProps extends InputProps {
   label?: string
   name?: string
   endInputAdornment?: ReactNode
+  helperText?: string
 }
 
 export function TextField({ name, ...props }: ITextFieldProps) {
@@ -27,17 +28,27 @@ interface IControlledInputProps extends Omit<ITextFieldProps, 'name'> {
   name: string
 }
 
-function ControlledInput({ name, label, endInputAdornment, ...props }: IControlledInputProps) {
+function ControlledInput({
+  name,
+  label,
+  endInputAdornment,
+  helperText,
+  ...props
+}: IControlledInputProps) {
   const { control } = useFormContext()
 
   const {
     field,
-    fieldState: {},
+    fieldState: { invalid, error },
   } = useController({ name, control })
 
   return (
     <YStack>
-      {label ? <Label htmlFor={name}>{label}</Label> : null}
+      {label ? (
+        <Label htmlFor={name} col={invalid ? '$red10' : undefined}>
+          {label}
+        </Label>
+      ) : null}
       <XStack gap="$2" ai="center">
         <Input
           f={1}
@@ -46,10 +57,16 @@ function ControlledInput({ name, label, endInputAdornment, ...props }: IControll
           onChangeText={field.onChange}
           onBlur={field.onBlur}
           ref={field.ref}
+          theme={invalid ? 'red' : undefined}
           {...props}
         />
         {endInputAdornment}
       </XStack>
+      {invalid || helperText ? (
+        <SizableText col={invalid ? '$red10' : undefined} size="$3">
+          {error?.message ?? helperText}
+        </SizableText>
+      ) : null}
     </YStack>
   )
 }
