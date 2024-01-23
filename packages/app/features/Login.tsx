@@ -6,12 +6,14 @@ import {
   H1,
   Paragraph,
   PasswordField,
+  ScrollView,
   Spinner,
   TextField,
   YStack,
 } from '@my/ui'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
+import * as SecureStore from 'expo-secure-store'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useLink } from 'solito/navigation'
 import { z } from 'zod'
@@ -25,6 +27,13 @@ const loginSchema = z.object({
 export function Login() {
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: (values: z.infer<typeof loginSchema>) => login(values),
+    onSuccess: ({ data }) => {
+      ;(async () => {
+        await SecureStore.setItemAsync('access_token', data.access)
+        await SecureStore.setItemAsync('refresh_token', data.refresh)
+      })().then(res => console.log({ res }))
+      console.log({ data })
+    },
     onError: ({
       response,
     }: AxiosError<
@@ -47,46 +56,48 @@ export function Login() {
   })
 
   return (
-    <YStack f={1} jc="center" ai="center">
-      <FormProvider {...form}>
-        <Form onSubmit={form.handleSubmit(values => mutate(values))}>
-          <Card padded maw={400} style={{ minWidth: 350 }}>
-            <Card.Header>
-              <H1>Log in</H1>
-              {isError ? (
-                error.response?.data.non_field_errors ? (
-                  error.response?.data.non_field_errors.map(error => (
-                    <Paragraph key={error} col="$red10">
-                      {error}
-                    </Paragraph>
-                  ))
-                ) : (
-                  <Paragraph col="$red10">Something went wrong, please try again</Paragraph>
-                )
-              ) : null}
-            </Card.Header>
-            <TextField label="Username or Email" name="username" />
-            <PasswordField />
-            <Card.Footer pt={16}>
-              <Form.Trigger asChild disabled={isPending}>
-                <Button
-                  theme="active"
-                  icon={isPending ? <Spinner /> : undefined}
-                  disabled={isPending}
-                >
-                  {isPending ? 'Logging in...' : 'Log in'}
-                </Button>
-              </Form.Trigger>
-            </Card.Footer>
-            <Paragraph ta="center" mt="$3.5">
-              Don't have an account?{' '}
-              <Paragraph col="$blue10" {...useLink({ href: '/register' })}>
-                Register
+    <ScrollView contentContainerStyle={{ flexGrow: 1, paddingVertical: 8 }}>
+      <YStack f={1} jc="center" ai="center">
+        <FormProvider {...form}>
+          <Form onSubmit={form.handleSubmit(values => mutate(values))}>
+            <Card padded maw={400} style={{ minWidth: 350 }}>
+              <Card.Header>
+                <H1>Log in</H1>
+                {isError ? (
+                  error.response?.data.non_field_errors ? (
+                    error.response?.data.non_field_errors.map(error => (
+                      <Paragraph key={error} col="$red10">
+                        {error}
+                      </Paragraph>
+                    ))
+                  ) : (
+                    <Paragraph col="$red10">Something went wrong, please try again</Paragraph>
+                  )
+                ) : null}
+              </Card.Header>
+              <TextField label="Username or Email" name="username" autoCapitalize="none" />
+              <PasswordField />
+              <Card.Footer pt={16}>
+                <Form.Trigger asChild disabled={isPending}>
+                  <Button
+                    theme="active"
+                    icon={isPending ? <Spinner /> : undefined}
+                    disabled={isPending}
+                  >
+                    {isPending ? 'Logging in...' : 'Log in'}
+                  </Button>
+                </Form.Trigger>
+              </Card.Footer>
+              <Paragraph ta="center" mt="$3.5">
+                Don't have an account?{' '}
+                <Paragraph col="$blue10" {...useLink({ href: '/register' })}>
+                  Register
+                </Paragraph>
               </Paragraph>
-            </Paragraph>
-          </Card>
-        </Form>
-      </FormProvider>
-    </YStack>
+            </Card>
+          </Form>
+        </FormProvider>
+      </YStack>
+    </ScrollView>
   )
 }

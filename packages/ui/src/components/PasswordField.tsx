@@ -15,9 +15,10 @@ export function PasswordField(props: ITextFieldProps) {
         <Button
           icon={showPassword ? <EyeOff /> : <Eye />}
           variant="outlined"
-          onPress={() => setShowPassword((state) => !state)}
+          onPress={() => setShowPassword(state => !state)}
         />
       }
+      autoCapitalize="none"
       {...props}
     />
   )
