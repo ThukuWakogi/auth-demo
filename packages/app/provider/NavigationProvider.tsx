@@ -10,10 +10,7 @@ export function NavigationProvider({ children }: { children: React.ReactNode }) 
           prefixes: [Linking.createURL('/')],
           config: {
             initialRouteName: 'home',
-            screens: {
-              home: '',
-              'user-detail': 'user/:id',
-            },
+            screens: { home: '', 'user-detail': 'user/:id', login: 'login', register: 'register' },
           },
         }),
         []
