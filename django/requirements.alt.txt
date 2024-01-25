@@ -4,3 +4,6 @@ djangorestframework-simplejwt==5.3.1
 django-allauth==0.60.1
 dj-rest-auth==5.0.2
 django-cors-headers==4.3.1
+django-extensions==3.2.3
+Werkzeug==3.0.1
+pyOpenSSL==24.0.0

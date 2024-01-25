@@ -31,7 +31,7 @@ SECRET_KEY = "django-insecure-f1v4dg+ino+c+kb#u+r+#qx*)0kox8$zl!qsomgs-^(fk)9mx7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.100.6']
+ALLOWED_HOSTS = ["192.168.100.6", "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "dj_rest_auth",
     "dj_rest_auth.registration",
     "corsheaders",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -93,10 +94,7 @@ WSGI_APPLICATION = "proj.wsgi.application"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": BASE_DIR / "db.sqlite3"}
 }
 
 
@@ -160,7 +158,7 @@ SIMPLE_JWT = {
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication"
     ]
 }
 
@@ -176,16 +174,19 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 
 REST_AUTH = {
     "USE_JWT": True,
-    "JWT_AUTH_HTTPONLY": False,
+    "JWT_AUTH_HTTPONLY": True,
+    "JWT_AUTH_COOKIE": "access",
+    "JWT_AUTH_REFRESH_COOKIE": "refresh",
+    "JWT_AUTH_SAMESITE": "None" if DEBUG else "Lax",
+    "JWT_AUTH_SECURE": True if DEBUG else True,
 }
 
 
 # Django Cors Headers
 
+CORS_ALLOW_CREDENTIALS = True
+
 if DEBUG:
-    CORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
 else:
-    CORS_ALLOWED_ORIGINS = [
-        "http://localhost:3000/",
-        "http://127.0.0.1:3000/",
-    ]
+    CORS_ALLOWED_ORIGINS = ["http://localhost:3000/", "http://127.0.0.1:3000/"]
