@@ -1,11 +1,20 @@
 import { ReactNode } from 'react'
 import { useController, useFormContext } from 'react-hook-form'
-import { Input, InputProps, Label, Paragraph, SizableText, XStack, YStack } from 'tamagui'
+import {
+  ButtonProps,
+  Input,
+  InputProps,
+  Label,
+  Paragraph,
+  SizableText,
+  XStack,
+  YStack,
+} from 'tamagui'
 
 export interface ITextFieldProps extends InputProps {
   label?: string
   name?: string
-  endInputAdornment?: ReactNode
+  endInputAdornment?: ReactNode | ((props: ButtonProps) => ReactNode)
   helperText?: string
 }
 
@@ -61,7 +70,9 @@ function ControlledInput({
           theme={invalid ? 'red' : undefined}
           {...props}
         />
-        {endInputAdornment}
+        {typeof endInputAdornment === 'function'
+          ? endInputAdornment({ disabled })
+          : endInputAdornment}
       </XStack>
       {invalid || helperText ? (
         <SizableText col={invalid ? '$red10' : undefined} size="$3">

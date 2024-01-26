@@ -11,13 +11,14 @@ export function PasswordField(props: ITextFieldProps) {
       label="Password"
       name="password"
       secureTextEntry={!showPassword}
-      endInputAdornment={
+      endInputAdornment={props => (
         <Button
           icon={showPassword ? <EyeOff /> : <Eye />}
           variant="outlined"
           onPress={() => setShowPassword(state => !state)}
+          {...props}
         />
-      }
+      )}
       autoCapitalize="none"
       {...props}
     />
