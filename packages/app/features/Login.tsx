@@ -15,6 +15,7 @@ import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import * as SecureStore from 'expo-secure-store'
 import { FormProvider, useForm } from 'react-hook-form'
+import { Platform } from 'react-native'
 import { useLink } from 'solito/navigation'
 import { z } from 'zod'
 import { login } from '../api'
@@ -28,20 +29,23 @@ export function Login() {
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: (values: z.infer<typeof loginSchema>) => login(values),
     onSuccess: ({ data }) => {
-      ;(async () => {
-        await SecureStore.setItemAsync('access_token', data.access)
-        await SecureStore.setItemAsync('refresh_token', data.refresh)
-      })().then(res => console.log({ res }))
+      if (Platform.OS !== 'web') {
+        ;(async () => {
+          await SecureStore.setItemAsync('access_token', data.access)
+          await SecureStore.setItemAsync('refresh_token', data.refresh)
+        })().then(res => console.log({ res }))
+      }
+
       console.log({ data })
     },
-    onError: ({
-      response,
-    }: AxiosError<
-      { non_field_errors?: string[] } & Record<keyof z.infer<typeof loginSchema>, string[]>
-    >) => {
-      console.log(response?.data)
-      if (response?.data)
-        Object.entries(response.data).forEach(([key, value]) =>
+    onError: (
+      error: AxiosError<
+        { non_field_errors?: string[] } & Record<keyof z.infer<typeof loginSchema>, string[]>
+      >
+    ) => {
+      console.log(error)
+      if (error.response?.data)
+        Object.entries(error.response.data).forEach(([key, value]) =>
           form.setError(key as keyof z.infer<typeof loginSchema>, { message: value.toString() })
         )
     },

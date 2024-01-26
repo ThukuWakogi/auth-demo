@@ -13,3 +13,5 @@ interface IRegisterBody {
 
 export const register = (body: IRegisterBody) =>
   axiosInstance.post<IAuthResponseData>('/api/auth/', body)
+
+export const verifyTokenUser = () => axiosInstance.post<{}>('/api/auth/token/verify/')
