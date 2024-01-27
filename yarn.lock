@@ -4979,6 +4979,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-devtools@npm:5.17.21":
+  version: 5.17.21
+  resolution: "@tanstack/query-devtools@npm:5.17.21"
+  checksum: 5ba34d2d03834a88ec1be41a810eabd6541f5d4c32974f403b802dacba921dbe238e542cd2b40067152ea4aef1fc144a4db8049e2848433a3fc1bdb26996297d
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query-devtools@npm:^5.17.21":
+  version: 5.17.21
+  resolution: "@tanstack/react-query-devtools@npm:5.17.21"
+  dependencies:
+    "@tanstack/query-devtools": "npm:5.17.21"
+  peerDependencies:
+    "@tanstack/react-query": ^5.17.19
+    react: ^18.0.0
+  checksum: c1e77062ea4623c367baaf3de31183d96d05840eac04fcabf4a32075f5c88a2409ce6d59156d2c383ee40f4769fd690e1068443b0cd68bd9cdc5ed655bbe51cd
+  languageName: node
+  linkType: hard
+
 "@tanstack/react-query@npm:^5.17.19":
   version: 5.17.19
   resolution: "@tanstack/react-query@npm:5.17.19"
@@ -5860,6 +5879,7 @@ __metadata:
     "@tamagui/shorthands": "npm:^1.86.6"
     "@tamagui/themes": "npm:^1.86.6"
     "@tanstack/react-query": "npm:^5.17.19"
+    "@tanstack/react-query-devtools": "npm:^5.17.21"
     "@types/react": "npm:^18.0.27"
     "@types/react-native": "npm:^0.71.3"
     axios: "npm:^1.6.5"
@@ -5871,6 +5891,7 @@ __metadata:
     react-native-safe-area-context: "npm:4.6.3"
     solito: "npm:^4.2.0"
     zod: "npm:^3.22.4"
+    zustand: "npm:^4.5.0"
   languageName: unknown
   linkType: soft
 
@@ -17734,7 +17755,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zustand@npm:^4.3.8":
+"zustand@npm:^4.3.8, zustand@npm:^4.5.0":
   version: 4.5.0
   resolution: "zustand@npm:4.5.0"
   dependencies:

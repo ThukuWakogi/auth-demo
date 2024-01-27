@@ -16,9 +16,10 @@ import { AxiosError } from 'axios'
 import * as SecureStore from 'expo-secure-store'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Platform } from 'react-native'
-import { useLink } from 'solito/navigation'
+import { useLink, useRouter } from 'solito/navigation'
 import { z } from 'zod'
 import { login } from '../api'
+import { useAuthenticationStore } from '../store/authenticationStore'
 
 const loginSchema = z.object({
   username: z.string().trim().min(1, { message: 'This field is required' }),
@@ -26,24 +27,25 @@ const loginSchema = z.object({
 })
 
 export function Login() {
+  const { push } = useRouter()
+  const setTokens = useAuthenticationStore(state => state.setTokens)
+
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: (values: z.infer<typeof loginSchema>) => login(values),
     onSuccess: ({ data }) => {
       if (Platform.OS !== 'web') {
-        ;(async () => {
-          await SecureStore.setItemAsync('access_token', data.access)
-          await SecureStore.setItemAsync('refresh_token', data.refresh)
-        })().then(res => console.log({ res }))
+        SecureStore.setItemAsync('access_token', data.access)
+        SecureStore.setItemAsync('refresh_token', data.refresh)
       }
 
-      console.log({ data })
+      setTokens({ accessToken: data.access, refreshToken: data.refresh })
+      push('/')
     },
     onError: (
       error: AxiosError<
         { non_field_errors?: string[] } & Record<keyof z.infer<typeof loginSchema>, string[]>
       >
     ) => {
-      console.log(error)
       if (error.response?.data)
         Object.entries(error.response.data).forEach(([key, value]) =>
           form.setError(key as keyof z.infer<typeof loginSchema>, { message: value.toString() })

@@ -1,3 +1,4 @@
+import { authenticationStore } from '../store/authenticationStore'
 import { IAuthResponseData } from '../types'
 import { axiosInstance } from './axiosInstance'
 
@@ -14,4 +15,7 @@ interface IRegisterBody {
 export const register = (body: IRegisterBody) =>
   axiosInstance.post<IAuthResponseData>('/api/auth/', body)
 
-export const verifyTokenUser = () => axiosInstance.post<{}>('/api/auth/token/verify/')
+export const verifyTokenUser = () =>
+  axiosInstance.post<{}>('/api/auth/token/verify/', {
+    token: authenticationStore.getState().accessToken,
+  })
