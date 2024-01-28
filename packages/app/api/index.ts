@@ -19,3 +19,5 @@ export const verifyTokenUser = () =>
   axiosInstance.post<{}>('/api/auth/token/verify/', {
     token: authenticationStore.getState().accessToken,
   })
+
+export const logout = () => axiosInstance.post('/api/auth/logout/')
