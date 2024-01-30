@@ -1,13 +1,13 @@
-from dj_rest_auth.views import LoginView
 from dj_rest_auth.app_settings import api_settings
-from django.utils import timezone
-from rest_framework.response import Response
+from dj_rest_auth.views import LoginView
 from rest_framework import status
+from rest_framework.response import Response
+
+from django.utils import timezone
 
 
 class CustomLoginView(LoginView):
     def get_response(self):
-        print("lolling....")
         serializer_class = self.get_response_serializer()
 
         if api_settings.USE_JWT:

@@ -30,7 +30,7 @@ const registerSchema = z
       .string()
       .trim()
       .min(1, { message: 'This field is required.' })
-      .min(7, 'The password is too short.'),
+      .min(6, 'The password is too short.'),
     password2: z.string().trim().min(1, { message: 'This field is required.' }),
   })
   .refine(({ password1, password2 }) => password1 === password2, {
@@ -39,7 +39,7 @@ const registerSchema = z
   })
 
 export function Register() {
-  const { mutate, isPending, isError, error } = useMutation({
+  const { mutate, isPending, error } = useMutation({
     mutationFn: (values: z.infer<typeof registerSchema>) => register(values),
     onSuccess: ({ data }) => console.log(JSON.stringify(data, null, 2)),
     onError: ({
@@ -54,6 +54,8 @@ export function Register() {
         )
     },
   })
+
+  console.log({ isPending })
 
   const form = useForm({
     defaultValues: { username: '', email: '', password1: '', password2: '' },
@@ -71,17 +73,13 @@ export function Register() {
             <Card padded maw={400} style={{ minWidth: 350 }}>
               <Card.Header>
                 <H1>Register</H1>
-                {isError ? (
-                  error.response?.data.non_field_errors ? (
-                    error.response?.data.non_field_errors.map(error => (
+                {error?.response?.data.non_field_errors
+                  ? error.response?.data.non_field_errors.map(error => (
                       <Paragraph key={error} col="$red10">
                         {error}
                       </Paragraph>
                     ))
-                  ) : (
-                    <Paragraph col="$red10">Something went wrong, please try again</Paragraph>
-                  )
-                ) : null}
+                  : null}
               </Card.Header>
               <TextField label="Username" name="username" autoCapitalize="none" />
               <TextField label="Email" name="email" autoCapitalize="none" />
