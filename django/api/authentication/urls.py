@@ -1,4 +1,5 @@
 from allauth.account.views import confirm_email
+from dj_rest_auth.jwt_auth import get_refresh_view
 from dj_rest_auth.registration.views import (
     RegisterView,
     ResendEmailVerificationView,
@@ -11,6 +12,7 @@ from dj_rest_auth.views import (
     PasswordResetView,
     UserDetailsView,
 )
+from rest_framework_simplejwt.views import TokenVerifyView
 
 from api.authentication.views import CustomLoginView
 from django.urls import path, re_path
@@ -42,4 +44,6 @@ urlpatterns = [
         TemplateView.as_view(),
         name="account_email_verification_sent",
     ),
+    path("token/verify/", TokenVerifyView.as_view(), name="token_verify"),
+    path("token/refresh/", get_refresh_view().as_view(), name="token_refresh"),
 ]

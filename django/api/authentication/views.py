@@ -1,9 +1,12 @@
+from allauth.account.models import EmailAddress
 from dj_rest_auth.app_settings import api_settings
 from dj_rest_auth.views import LoginView
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.serializers import ValidationError
 
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 
 class CustomLoginView(LoginView):
@@ -54,3 +57,31 @@ class CustomLoginView(LoginView):
 
             set_jwt_cookies(response, self.access_token, self.refresh_token)
         return response
+
+    def post(self, request, *args, **kwargs):
+        self.request = request
+        self.serializer = self.get_serializer(data=self.request.data)
+        print(request.data)
+        try:
+            self.serializer.is_valid(raise_exception=True)
+        except ValidationError as e:
+            if "non_field_errors" in e.detail:
+                for x in e.detail.get("non_field_errors"):
+                    if x == "E-mail is not verified.":
+                        email = EmailAddress.objects.filter(
+                            user__username=request.data.get("username")
+                        ).first()
+
+                        if email and not email.verified:
+                            email.send_confirmation(request)
+
+                            raise ValidationError(
+                                _(
+                                    f"A verification E-mail has been sent to {email.email}."
+                                )
+                            )
+
+            raise ValidationError(e.detail)
+
+        self.login()
+        return self.get_response()
