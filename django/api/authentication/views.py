@@ -76,12 +76,17 @@ class CustomLoginView(LoginView):
                             email.send_confirmation(request)
 
                             raise ValidationError(
-                                _(
-                                    f"A verification E-mail has been sent to {email.email}."
-                                )
+                                {
+                                    "non_field_errors": [
+                                        _(
+                                            f"A verification E-mail has been sent to {email.email}."
+                                        )
+                                    ]
+                                }
                             )
 
             raise ValidationError(e.detail)
 
         self.login()
+
         return self.get_response()

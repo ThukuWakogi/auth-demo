@@ -66,6 +66,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    "api.authentication.middleware.MoveHTTPOnlyTokenToBody",
 ]
 
 ROOT_URLCONF = "proj.urls"
@@ -182,6 +183,8 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+
+ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 0 if DEBUG else 180
 
 
 # Django Rest Auth
