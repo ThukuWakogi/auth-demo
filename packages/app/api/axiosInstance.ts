@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios'
+import * as SecureStore from 'expo-secure-store'
 import { Platform } from 'react-native'
 
 const axiosInstance = axios.create({
@@ -7,29 +8,29 @@ const axiosInstance = axios.create({
 })
 
 axiosInstance.interceptors.response.use(
-  response => {
-    console.log({ response })
-
-    return response
-  },
+  response => response,
   async (error: AxiosError) => {
-    console.log('lol', { error })
-    console.log(error.response?.config.url)
-    console.log(error.response?.config.url === '/api/auth/token/verify/')
-
     if (error.response?.config.url === '/api/auth/token/verify/') {
       try {
+        let refresh: string | null = null
+
+        if (Platform.OS !== 'web') refresh = await SecureStore.getItemAsync('refresh_token')
+
         const res = await axios<{ access: string; access_expiration: string }>({
           method: 'post',
           withCredentials: true,
           url: 'https://192.168.100.6:8000/api/auth/token/refresh/',
+          data: Platform.OS === 'web' ? undefined : { refresh },
         })
-
-        console.log({ res })
 
         return await axios({ ...error.config })
       } catch (e) {
         console.log({ e })
+
+        if (e instanceof AxiosError && Platform.OS !== 'web') {
+          await SecureStore.deleteItemAsync('refresh_token')
+          e.response?.status === 401
+        }
       }
     }
 
