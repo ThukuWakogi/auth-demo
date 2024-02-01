@@ -47,7 +47,6 @@ export function HomeScreen() {
         }),
     placeholderData: keepPreviousData,
     retry: (_failureCount, error: AxiosError) => error.response?.status !== 400,
-    enabled: Platform.OS === 'web' ? true : !!accessToken,
   })
 
   return (

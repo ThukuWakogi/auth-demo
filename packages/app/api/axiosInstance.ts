@@ -1,3 +1,4 @@
+import { authenticationStore } from 'app/store/authenticationStore'
 import axios, { AxiosError } from 'axios'
 import * as SecureStore from 'expo-secure-store'
 import { Platform } from 'react-native'
@@ -23,10 +24,13 @@ axiosInstance.interceptors.response.use(
           data: Platform.OS === 'web' ? undefined : { refresh },
         })
 
+        if (Platform.OS !== 'web') {
+          await SecureStore.setItemAsync('access_token', res.data.access)
+          authenticationStore.getState().setTokens({ accessToken: res.data.access })
+        }
+
         return await axios({ ...error.config })
       } catch (e) {
-        console.log({ e })
-
         if (e instanceof AxiosError && Platform.OS !== 'web') {
           await SecureStore.deleteItemAsync('refresh_token')
           e.response?.status === 401
