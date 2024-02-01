@@ -16,15 +16,28 @@ class MoveHTTPOnlyTokenToBody:
         return response
 
     def process_view(self, request: HttpRequest, view_func, *view_args, **view_kwargs):
-        if request.path == "/api/auth/token/verify/":
+        self.pass_cookie_to_body(
+            request, "/api/auth/token/verify/", "token", api_settings.JWT_AUTH_COOKIE
+        )
+        self.pass_cookie_to_body(
+            request,
+            "/api/auth/token/refresh/",
+            "refresh",
+            api_settings.JWT_AUTH_REFRESH_COOKIE,
+        )
+
+        return None
+
+    def pass_cookie_to_body(
+        self, request: HttpRequest, url_path: str, key: str, cookie_key: str
+    ) -> None:
+        if request.path == url_path:
             try:
-                if "token" in json.loads(request.body.decode("utf-8")):
+                if key in json.loads(request.body.decode("utf-8")):
                     return None
             except JSONDecodeError:
                 ...
 
-            if api_settings.JWT_AUTH_COOKIE in request.COOKIES:
-                data = {"token": request.COOKIES[api_settings.JWT_AUTH_COOKIE]}
+            if cookie_key in request.COOKIES:
+                data = {key: request.COOKIES[cookie_key]}
                 request._body = json.dumps(data).encode("utf-8")
-
-        return None

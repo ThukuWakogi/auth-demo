@@ -14,7 +14,7 @@ from dj_rest_auth.views import (
 )
 from rest_framework_simplejwt.views import TokenVerifyView
 
-from api.authentication.views import CustomLoginView
+from api.authentication.views import CustomLoginView, CustomTokenVerifyView
 from django.urls import path, re_path
 from django.views.generic import TemplateView
 
@@ -44,6 +44,6 @@ urlpatterns = [
         TemplateView.as_view(),
         name="account_email_verification_sent",
     ),
-    path("token/verify/", TokenVerifyView.as_view(), name="token_verify"),
+    path("token/verify/", CustomTokenVerifyView.as_view(), name="token_verify"),
     path("token/refresh/", get_refresh_view().as_view(), name="token_refresh"),
 ]

@@ -29,6 +29,7 @@ const loginSchema = z.object({
 export function Login() {
   const { push } = useRouter()
   const setTokens = useAuthenticationStore(state => state.setTokens)
+  const registerLink = useLink({ href: '/register' })
 
   const { mutate, isPending, isError, error } = useMutation({
     mutationFn: (values: z.infer<typeof loginSchema>) => login(values),
@@ -96,7 +97,7 @@ export function Login() {
               </Card.Footer>
               <Paragraph ta="center" mt="$3.5">
                 Don't have an account?{' '}
-                <Paragraph col="$blue10" {...useLink({ href: '/register' })}>
+                <Paragraph col="$blue10" {...registerLink}>
                   Register
                 </Paragraph>
               </Paragraph>

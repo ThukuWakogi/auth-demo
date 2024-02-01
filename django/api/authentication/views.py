@@ -2,8 +2,10 @@ from allauth.account.models import EmailAddress
 from dj_rest_auth.app_settings import api_settings
 from dj_rest_auth.views import LoginView
 from rest_framework import status
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
+from rest_framework_simplejwt.views import TokenVerifyView
 
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -90,3 +92,15 @@ class CustomLoginView(LoginView):
         self.login()
 
         return self.get_response()
+
+
+class CustomTokenVerifyView(TokenVerifyView):
+    def post(self, request: Request, *args, **kwargs) -> Response:
+        if (
+            "token" not in request.data
+            and "access" in request.COOKIES
+            and request.COOKIES["access"]
+        ):
+            request.data["token"] = request.COOKIES["access"]
+
+        return super().post(request, *args, **kwargs)

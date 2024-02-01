@@ -1,3 +1,4 @@
+import { Platform } from 'react-native'
 import { authenticationStore } from '../store/authenticationStore'
 import { IAuthResponseData } from '../types'
 import { axiosInstance } from './axiosInstance'
@@ -16,8 +17,13 @@ export const register = (body: IRegisterBody) =>
   axiosInstance.post<IAuthResponseData>('/api/auth/', body)
 
 export const verifyTokenUser = () =>
-  axiosInstance.post<{}>('/api/auth/token/verify/', {
-    token: authenticationStore.getState().accessToken,
-  })
+  axiosInstance.post<{}>(
+    '/api/auth/token/verify/',
+    Platform.OS === 'web'
+      ? undefined
+      : {
+          token: authenticationStore.getState().accessToken,
+        }
+  )
 
 export const logout = () => axiosInstance.post('/api/auth/logout/')
